@@ -71,3 +71,18 @@ Add column names:
 }
 
 ```
+
+Set delimiter and enclosure:
+
+```
+{
+    "definition": {
+        "component": "keboola.processor-create-manifest"
+    },
+    "parameters": {
+    	"delimiter": "\t",
+    	"enclosure": "'"
+	}
+}
+
+```
