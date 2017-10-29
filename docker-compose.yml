@@ -1,0 +1,14 @@
+version: '2'
+services:
+  dev:
+    build: .
+    image: keboola/processor-create-manifest
+    tty: true
+    stdin_open: true
+    volumes:
+      - .:/code
+
+  processor-create-manifest:
+    image: keboola/processor-create-manifest
+    tty: true
+    stdin_open: true
