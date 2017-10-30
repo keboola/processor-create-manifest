@@ -5,7 +5,7 @@ services:
 before_script:
   - docker-compose build
   - docker-compose run dev composer install
-script: ./tests/run.sh
+script: docker-compose run tests
 after_success:
   - docker images
 deploy:
