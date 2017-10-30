@@ -8,6 +8,13 @@
         "symfony/finder": "^3.3",
         "PHP": "^7.1",
         "keboola/php-temp": "^0.1",
-        "symfony/process": "^3.3"
+        "symfony/process": "^3.3",
+        "symfony/serializer": "^3.3",
+        "symfony/config": "^3.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Keboola\\Processor\\CreateManifest\\": "src/"
+        }
     }
 }
