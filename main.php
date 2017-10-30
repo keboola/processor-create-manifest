@@ -36,7 +36,7 @@ try {
     );
 
     $finder = new \Symfony\Component\Finder\Finder();
-    $finder->notContains(".manifest")->in($arguments["data"] . "/in/tables/")->depth(0);
+    $finder->notName("*.manifest")->in($arguments["data"] . "/in/tables")->depth(0);
 
     foreach ($finder as $sourceFile) {
         // read manifest from file or create empty manifest
@@ -64,6 +64,31 @@ try {
         }
         if (!isset($manifest["primary_key"]) || isset($config["parameters"]["columns"])) {
             $manifest["columns"] = $parameters["columns"];
+        }
+
+        if (isset($parameters["columns_from"])) {
+            $detectFile = $sourceFile->getPathname();
+            if (is_dir($sourceFile->getPathname())) {
+                $subFinder = new \Symfony\Component\Finder\Finder();
+                $subFinder->in($sourceFile->getPathname())->depth(0);
+                if (!count($subFinder)) {
+                    throw new \Keboola\Processor\CreateManifest\Exception("Sliced file '{$sourceFile->getPathname()}' does not contain slices.");
+                }
+
+                foreach ($subFinder as $slicedFilePart) {
+                    $detectFile = $slicedFilePart->getPathname();
+                    break;
+                }
+
+            }
+            $csv = new Keboola\Csv\CsvFile($detectFile, $manifest["delimiter"], $manifest["enclosure"]);
+            if ($parameters["columns_from"] === 'auto') {
+                $manifest["columns"] = array_map(function($index) {
+                    return "col_{$index}";
+                }, range(1, $csv->getColumnsCount(), 1));
+            } elseif ($parameters["columns_from"] === 'header') {
+                $manifest["columns"] = $csv->getHeader();
+            }
         }
 
         $copyCommand = "cp -R " . $sourceFile->getPathName() . " " . $outputPath . "/" . $sourceFile->getBasename();

@@ -4,7 +4,7 @@ require_once(__DIR__ . "/../vendor/autoload.php");
 $testFolder = __DIR__;
 
 $finder = new \Symfony\Component\Finder\Finder();
-$finder->directories()->in($testFolder)->depth(0);
+$finder->directories()->sortByName()->in($testFolder)->depth(0);
 foreach ($finder as $testSuite) {
     print "Test " . $testSuite->getPathName() . "\n";
     $temp = new \Keboola\Temp\Temp("processor-create-manifest");
@@ -20,7 +20,7 @@ foreach ($finder as $testSuite) {
     $runProcess = new \Symfony\Component\Process\Process($runCommand);
     $runProcess->mustRun();
 
-    //print "\n" . $runProcess->getOutput() . "\n";
+    // print "\n" . $runProcess->getOutput() . "\n";
 
     $diffCommand = "diff --ignore-all-space --recursive " . $testSuite->getPathName() . "/expected/data/out " . $temp->getTmpFolder() . "/out";
     $diffProcess = new \Symfony\Component\Process\Process($diffCommand);

@@ -1,1 +1,1 @@
-{"delimiter":",","enclosure":"\"","columns":["col1","col2"],"primary_key":[],"incremental":false}
+{"delimiter":",","enclosure":"\"","primary_key":[],"incremental":false,"columns":["col1","col2"]}
