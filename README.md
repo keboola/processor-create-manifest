@@ -42,7 +42,7 @@ It supports optional parameters:
  - `columns` -- Array of column names
  - `columns_from` (`header`, `auto`) -- Populates the `columns` attribute
    - `header` -- Uses the first line of the CSV file (or of any of the slices) as the column names
-   - `auto` -- Creates the column names automatically as a sequence, starts with `col_1` 
+   - `auto` -- Creates the column names automatically as a sequence, starting with `col_1` 
  - `primary_key` -- Array of column names
  - `incremental` -- `true` or `false`
 
