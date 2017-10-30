@@ -12,3 +12,12 @@ services:
     image: keboola/processor-create-manifest
     tty: true
     stdin_open: true
+
+  tests:
+    build: .
+    image: keboola/processor-create-manifest
+    tty: true
+    stdin_open: true
+    volumes:
+      - .:/code
+    command: php /code/tests/run.php

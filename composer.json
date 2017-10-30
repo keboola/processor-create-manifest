@@ -1,0 +1,13 @@
+{
+    "name": "keboola/processor-create-manifest",
+    "license": "MIT",
+    "type": "project",	
+    "require": {
+        "keboola/csv": "^1.1",
+        "symfony/filesystem": "^3.3",
+        "symfony/finder": "^3.3",
+        "PHP": "^7.1",
+        "keboola/php-temp": "^0.1",
+        "symfony/process": "^3.3"
+    }
+}

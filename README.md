@@ -24,7 +24,7 @@ docker-compose build
 Run the test suite using this command:
 
 ```
-./tests/run.sh
+docker-compose run tests
 ```
  
 # Integration
