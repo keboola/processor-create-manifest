@@ -1,4 +1,6 @@
 {
-  "delimiter": "\t",
-  "enclosure": "'"
+  "parameters": {
+    "delimiter": "\t",
+    "enclosure": "'"
+  }
 }

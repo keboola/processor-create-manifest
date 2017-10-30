@@ -1,6 +1,8 @@
 {
-  "columns": [
-    "col1",
-    "col2"
-  ]
+  "parameters": {
+    "columns": [
+      "col1",
+      "col2"
+    ]
+  }
 }

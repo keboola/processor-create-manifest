@@ -1,3 +1,5 @@
 {
-  "columns_from": "auto"
+  "parameters": {
+    "columns_from": "auto"
+  }
 }

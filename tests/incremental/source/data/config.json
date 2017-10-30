@@ -1,3 +1,5 @@
 {
-  "incremental": true
+  "parameters": {
+    "incremental": true
+  }
 }

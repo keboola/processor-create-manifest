@@ -1,6 +1,8 @@
 {
-  "primary_key": [
-    "col1",
-    "col2"
-  ]
+  "parameters": {
+    "primary_key": [
+      "col1",
+      "col2"
+    ]
+  }
 }

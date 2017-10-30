@@ -1,3 +1,5 @@
 {
-  "columns_from": "header"
+  "parameters": {
+    "columns_from": "header"
+  }
 }
