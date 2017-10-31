@@ -22,6 +22,9 @@ foreach ($finder as $testSuite) {
 
     // print "\n" . $runProcess->getOutput() . "\n";
 
+    passthru("ls -R " . $temp->getTmpFolder());
+    passthru("ls -R " . $testSuite->getPathName() . "/expected/data");
+
     $diffCommand = "diff --ignore-all-space --recursive " . $testSuite->getPathName() . "/expected/data/out " . $temp->getTmpFolder() . "/out";
     $diffProcess = new \Symfony\Component\Process\Process($diffCommand);
     $diffProcess->run();
