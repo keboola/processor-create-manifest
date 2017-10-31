@@ -10,11 +10,12 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 $arguments = getopt("", ["data:"]);
 if (!isset($arguments["data"])) {
-    echo "Data folder not set." . "\n";
-    exit(2);
+    $dataFolder = "/data";
+} else {
+    $dataFolder = $arguments["data"];
 }
 
-$configFile = $arguments["data"] . "/config.json";
+$configFile = $dataFolder . "/config.json";
 if (!file_exists($configFile)) {
     echo "Config file not found" . "\n";
     exit(2);
@@ -25,10 +26,10 @@ try {
     $jsonEncode = new \Symfony\Component\Serializer\Encoder\JsonEncode();
 
     $config = $jsonDecode->decode(
-        file_get_contents($arguments["data"] . "/config.json"),
+        file_get_contents($dataFolder . "/config.json"),
         JsonEncoder::FORMAT
     );
-    $outputPath = $arguments["data"] . "/out/tables";
+    $outputPath = $dataFolder . "/out/tables";
 
     $parameters = (new \Symfony\Component\Config\Definition\Processor())->processConfiguration(
         new \Keboola\Processor\CreateManifest\ConfigDefinition(),
@@ -36,7 +37,7 @@ try {
     );
 
     $finder = new \Symfony\Component\Finder\Finder();
-    $finder->notName("*.manifest")->in($arguments["data"] . "/in/tables")->depth(0);
+    $finder->notName("*.manifest")->in($dataFolder . "/in/tables")->depth(0);
 
     foreach ($finder as $sourceFile) {
         // read manifest from file or create empty manifest
