@@ -66,8 +66,8 @@ Add column names:
         "component": "keboola.processor-create-manifest"
     },
     "parameters": {
-    	"columns": ["id", "amount"]
-	}
+        "columns": ["id", "amount"]
+    }
 }
 
 ```
@@ -80,9 +80,9 @@ Set delimiter and enclosure:
         "component": "keboola.processor-create-manifest"
     },
     "parameters": {
-    	"delimiter": "\t",
-    	"enclosure": "'"
-	}
+        "delimiter": "\t",
+        "enclosure": "'"
+    }
 }
 
 ```
