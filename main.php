@@ -92,7 +92,7 @@ try {
             }
         }
 
-        $copyCommand = "cp -R " . $sourceFile->getPathName() . " " . $outputPath . "/" . $sourceFile->getBasename();
+        $copyCommand = "mv " . $sourceFile->getPathName() . " " . $outputPath . "/" . $sourceFile->getBasename();
         (new \Symfony\Component\Process\Process($copyCommand))->mustRun();
 
         file_put_contents($outputPath . "/" . $sourceFile->getBasename() . ".manifest", $jsonEncode->encode($manifest, JsonEncoder::FORMAT));
