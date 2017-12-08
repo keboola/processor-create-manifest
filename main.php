@@ -63,7 +63,7 @@ try {
         if (!isset($manifest["incremental"]) || isset($config["parameters"]["incremental"])) {
             $manifest["incremental"] = $parameters["incremental"];
         }
-        if (!isset($manifest["primary_key"]) || isset($config["parameters"]["columns"])) {
+        if (!isset($manifest["columns"]) || isset($config["parameters"]["columns"])) {
             $manifest["columns"] = $parameters["columns"];
         }
 
