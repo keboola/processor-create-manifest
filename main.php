@@ -73,7 +73,9 @@ try {
                 $subFinder = new \Symfony\Component\Finder\Finder();
                 $subFinder->in($sourceFile->getPathname())->depth(0);
                 if (!count($subFinder)) {
-                    throw new \Keboola\Processor\CreateManifest\Exception("Sliced file '{$sourceFile->getPathname()}' does not contain slices.");
+                    throw new \Keboola\Processor\CreateManifest\Exception(
+                        "Sliced file '{$sourceFile->getPathname()}' does not contain slices."
+                    );
                 }
 
                 foreach ($subFinder as $slicedFilePart) {
@@ -84,7 +86,7 @@ try {
             }
             $csv = new Keboola\Csv\CsvFile($detectFile, $manifest["delimiter"], $manifest["enclosure"]);
             if ($parameters["columns_from"] === 'auto') {
-                $manifest["columns"] = array_map(function($index) {
+                $manifest["columns"] = array_map(function ($index) {
                     return "col_{$index}";
                 }, range(1, $csv->getColumnsCount(), 1));
             } elseif ($parameters["columns_from"] === 'header') {
@@ -92,10 +94,13 @@ try {
             }
         }
 
-        $copyCommand = "mv " . $sourceFile->getPathName() . " " . $outputPath . "/" . $sourceFile->getBasename();
+        $copyCommand = "mv " . $sourceFile->getPathname() . " " . $outputPath . "/" . $sourceFile->getBasename();
         (new \Symfony\Component\Process\Process($copyCommand))->mustRun();
 
-        file_put_contents($outputPath . "/" . $sourceFile->getBasename() . ".manifest", $jsonEncode->encode($manifest, JsonEncoder::FORMAT));
+        file_put_contents(
+            $outputPath . "/" . $sourceFile->getBasename() . ".manifest",
+            $jsonEncode->encode($manifest, JsonEncoder::FORMAT)
+        );
     }
 } catch (\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException $e) {
     echo "Invalid configuration: " . $e->getMessage();
