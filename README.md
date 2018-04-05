@@ -41,7 +41,7 @@ It supports optional parameters:
  - `enclosure` -- CSV enclosure, defaults to `"`
  - `columns` -- Array of column names
  - `columns_from` (`header`, `auto`) -- Populates the `columns` attribute
-   - `header` -- Uses the first line of the CSV file (or of any of the slices) as the column names
+   - `header` -- Uses the first line of the CSV file (or of any of the slices) as the column names, if the headers are empty, then auto-generated names are used.
    - `auto` -- Creates the column names automatically as a sequence, starting with `col_1` 
  - `primary_key` -- Array of column names
  - `incremental` -- `true` or `false`
