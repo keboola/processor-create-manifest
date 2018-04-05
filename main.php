@@ -83,7 +83,9 @@ try {
                 $subFinder = new \Symfony\Component\Finder\Finder();
                 $subFinder->in($sourceFile->getPathname())->depth(0);
                 if (!count($subFinder)) {
-                    throw new \Keboola\Processor\CreateManifest\Exception("Sliced file '{$sourceFile->getPathname()}' does not contain slices.");
+                    throw new \Keboola\Processor\CreateManifest\Exception(
+                        "Sliced file '{$sourceFile->getPathname()}' does not contain slices."
+                    );
                 }
 
                 foreach ($subFinder as $slicedFilePart) {
@@ -100,10 +102,17 @@ try {
             }
         }
 
-        $copyCommand = "mv " . $sourceFile->getPathName() . " " . $outputPath . "/" . $sourceFile->getBasename();
+        $copyCommand = "mv " . $sourceFile->getPathname() . " " . $outputPath . "/" . $sourceFile->getBasename();
         (new \Symfony\Component\Process\Process($copyCommand))->mustRun();
 
-        file_put_contents($outputPath . "/" . $sourceFile->getBasename() . ".manifest", $jsonEncode->encode($manifest, JsonEncoder::FORMAT));
+        try {
+            file_put_contents(
+                $outputPath . "/" . $sourceFile->getBasename() . ".manifest",
+                $jsonEncode->encode($manifest, JsonEncoder::FORMAT)
+            );
+        } catch (\Symfony\Component\Serializer\Exception\UnexpectedValueException $e) {
+            throw new \Keboola\Processor\CreateManifest\Exception("Failed to create manifest: " . $e->getMessage());
+        }
     }
 } catch (\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException $e) {
     echo "Invalid configuration: " . $e->getMessage();
