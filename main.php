@@ -21,6 +21,16 @@ if (!file_exists($configFile)) {
     exit(2);
 }
 
+function fillHeader($header)
+{
+    array_walk($header, function (&$value, $index) {
+        if (!$value) {
+            $value = "col_" . ($index + 1);
+        }
+    });
+    return $header;
+}
+
 try {
     $jsonDecode = new JsonDecode(true);
     $jsonEncode = new \Symfony\Component\Serializer\Encoder\JsonEncode();
@@ -86,11 +96,9 @@ try {
             }
             $csv = new Keboola\Csv\CsvFile($detectFile, $manifest["delimiter"], $manifest["enclosure"]);
             if ($parameters["columns_from"] === 'auto') {
-                $manifest["columns"] = array_map(function ($index) {
-                    return "col_{$index}";
-                }, range(1, $csv->getColumnsCount(), 1));
+                $manifest["columns"] = fillHeader(array_fill(0, $csv->getColumnsCount(), ""));
             } elseif ($parameters["columns_from"] === 'header') {
-                $manifest["columns"] = $csv->getHeader();
+                $manifest["columns"] = fillHeader($csv->getHeader());
             }
         }
 
