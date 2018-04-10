@@ -1,30 +1,56 @@
 <?php
-require_once(__DIR__ . "/../vendor/autoload.php");
+
+use Keboola\Temp\Temp;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Process\Process;
+
+require_once __DIR__ . "/../vendor/autoload.php";
 
 $testFolder = __DIR__;
 
-$finder = new \Symfony\Component\Finder\Finder();
+$finder = new Finder();
+$fs = new Filesystem();
 $finder->directories()->sortByName()->in($testFolder)->depth(0);
 foreach ($finder as $testSuite) {
-    print "Test " . $testSuite->getPathName() . "\n";
-    $temp = new \Keboola\Temp\Temp("processor-create-manifest");
+    print "Test " . $testSuite->getPathname() . "\n";
+    $temp = new Temp("processor-create-manifest");
     $temp->initRunFolder();
 
-    $copyCommand = "cp -R " . $testSuite->getPathName() . "/source/data/* " . $temp->getTmpFolder();
-    (new \Symfony\Component\Process\Process($copyCommand))->mustRun();
+    $copyCommand = "cp -R " . $testSuite->getPathname() . "/source/data/* " . $temp->getTmpFolder();
+    (new Process($copyCommand))->mustRun();
 
-    mkdir($temp->getTmpFolder() . "/out/tables", 0777, true);
-    mkdir($temp->getTmpFolder() . "/out/files", 0777, true);
+    $fs->mkdir([
+        $temp->getTmpFolder() . "/in/tables",
+        $temp->getTmpFolder() . "/in/files",
+        $temp->getTmpFolder() . "/out/tables",
+        $temp->getTmpFolder() . "/out/files",
+    ]);
 
-    $runCommand = "php /code/main.php --data=" . $temp->getTmpFolder();
-    $runProcess = new \Symfony\Component\Process\Process($runCommand);
-    $runProcess->mustRun();
-
-    $diffCommand = "diff --exclude=.gitkeep --ignore-all-space --recursive " . $testSuite->getPathName() . "/expected/data/out " . $temp->getTmpFolder() . "/out";
-    $diffProcess = new \Symfony\Component\Process\Process($diffCommand);
-    $diffProcess->run();
-    if ($diffProcess->getExitCode() > 0) {
-        print "\n" . $diffProcess->getOutput() . "\n";
-        exit(1);
+    $runCommand = "php " . $testFolder . "/../main.php --data=" . $temp->getTmpFolder();
+    $runProcess = new Process($runCommand);
+    $runProcess->run();
+    if (($runProcess->getExitCode() > 0) && !file_exists($testSuite->getPathname() . "/expected")) {
+        if ($runProcess->getExitCode() == 1) {
+            print "Failed as expected ({$runProcess->getExitCode()}): {$runProcess->getOutput()} \n";
+        } else {
+            print "Failed unexpectedly {$runProcess->getExitCode()}\n";
+            if ($runProcess->getOutput()) {
+                print $runProcess->getOutput() . "\n";
+            }
+            if ($runProcess->getErrorOutput()) {
+                print $runProcess->getErrorOutput() . "\n";
+            }
+            exit(1);
+        }
+    } else {
+        $diffCommand = "diff --exclude=.gitkeep --ignore-all-space --recursive " .
+            $testSuite->getPathname() . "/expected/data/out " . $temp->getTmpFolder() . "/out";
+        $diffProcess = new Process($diffCommand);
+        $diffProcess->run();
+        if ($diffProcess->getExitCode() > 0) {
+            print "\n" . $diffProcess->getOutput() . "\n";
+            exit(1);
+        }
     }
 }

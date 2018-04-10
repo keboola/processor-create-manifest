@@ -114,6 +114,9 @@ try {
             throw new \Keboola\Processor\CreateManifest\Exception("Failed to create manifest: " . $e->getMessage());
         }
     }
+} catch (\Keboola\Csv\Exception $e) {
+    echo "The CSV file is invalid: " . $e->getMessage();
+    exit(1);
 } catch (\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException $e) {
     echo "Invalid configuration: " . $e->getMessage();
     exit(1);
