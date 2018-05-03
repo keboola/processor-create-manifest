@@ -51,23 +51,23 @@ try {
         }
 
         // use defaults or force overwrite values
-        if (!isset($manifest["delimiter"]) || isset($config["parameters"]["delimiter"])) {
+        if (!isset($manifest["delimiter"]) || !empty($parameters["delimiter"])) {
             $manifest["delimiter"] = $parameters["delimiter"];
         }
-        if (!isset($manifest["enclosure"]) || isset($config["parameters"]["enclosure"])) {
+        if (!isset($manifest["enclosure"]) || !empty($parameters["enclosure"])) {
             $manifest["enclosure"] = $parameters["enclosure"];
         }
-        if (!isset($manifest["primary_key"]) || isset($config["parameters"]["primary_key"])) {
+        if (!isset($manifest["primary_key"]) || !empty($parameters["primary_key"])) {
             $manifest["primary_key"] = $parameters["primary_key"];
         }
-        if (!isset($manifest["incremental"]) || isset($config["parameters"]["incremental"])) {
+        if (!isset($manifest["incremental"]) || !empty($parameters["incremental"])) {
             $manifest["incremental"] = $parameters["incremental"];
         }
-        if (!isset($manifest["columns"]) || isset($config["parameters"]["columns"])) {
+        if (!isset($manifest["columns"]) || !empty($parameters["columns"])) {
             $manifest["columns"] = $parameters["columns"];
         }
 
-        if (isset($parameters["columns_from"])) {
+        if (!empty($parameters["columns_from"])) {
             $detectFile = $sourceFile->getPathname();
             if (is_dir($sourceFile->getPathname())) {
                 $subFinder = new \Symfony\Component\Finder\Finder();
