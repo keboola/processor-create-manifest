@@ -60,20 +60,29 @@ try {
             $manifest = [];
         }
 
-        // use defaults or force overwrite values
-        if (!isset($manifest["delimiter"]) || isset($config["parameters"]["delimiter"])) {
+        $manifestVariables = array_keys($manifest);
+        $configVariables = [];
+        if (isset($config["parameters"]) && is_array($config["parameters"])) {
+            $configVariables = array_keys($config["parameters"]);
+        }
+        /*
+         * If the manifest value is not set or the user provided value is set (even empty), set the manifest
+         * to the parameters value (= user provided value or default)
+         * https://github.com/keboola/processor-create-manifest/pull/11#discussion_r185779866
+         */
+        if (!in_array("delimiter", $manifestVariables) || in_array("delimiter", $configVariables)) {
             $manifest["delimiter"] = $parameters["delimiter"];
         }
-        if (!isset($manifest["enclosure"]) || isset($config["parameters"]["enclosure"])) {
+        if (!in_array("enclosure", $manifestVariables) || in_array("enclosure", $configVariables)) {
             $manifest["enclosure"] = $parameters["enclosure"];
         }
-        if (!isset($manifest["primary_key"]) || isset($config["parameters"]["primary_key"])) {
+        if (!in_array("primary_key", $manifestVariables) || in_array("primary_key", $configVariables)) {
             $manifest["primary_key"] = $parameters["primary_key"];
         }
-        if (!isset($manifest["incremental"]) || isset($config["parameters"]["incremental"])) {
+        if (!in_array("incremental", $manifestVariables) || in_array("incremental", $configVariables)) {
             $manifest["incremental"] = $parameters["incremental"];
         }
-        if (!isset($manifest["columns"]) || isset($config["parameters"]["columns"])) {
+        if (!in_array("columns", $manifestVariables) || in_array("columns", $configVariables)) {
             $manifest["columns"] = $parameters["columns"];
         }
 
