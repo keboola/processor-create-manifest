@@ -7,14 +7,17 @@
         "symfony/filesystem": "^4.0",
         "symfony/finder": "^4.0",
         "PHP": "^7.1",
-        "keboola/php-temp": "^0.1",
         "symfony/process": "^4.0",
         "symfony/serializer": "^4.0",
-        "symfony/config": "^4.0"
+        "symfony/config": "^4.0",
+        "keboola/datadir-tests": "^1.1"
     },
     "autoload": {
         "psr-4": {
             "Keboola\\Processor\\CreateManifest\\": "src/"
         }
+    },
+    "scripts": {
+        "datadir-tests": "datadir-tests tests main.php"
     }
 }
