@@ -10,14 +10,14 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 $arguments = getopt("", ["data:"]);
 if (!isset($arguments["data"])) {
-    $dataFolder = "/data";
+    $dataFolder = getenv('KBC_DATADIR') === false ? '/data/' : (string)getenv('KBC_DATADIR');
 } else {
     $dataFolder = $arguments["data"];
 }
 
 $configFile = $dataFolder . "/config.json";
 if (!file_exists($configFile)) {
-    echo "Config file not found" . "\n";
+    echo sprintf("Config file '%s' not found" . "\n", $configFile);
     exit(2);
 }
 
