@@ -20,4 +20,4 @@ services:
     stdin_open: true
     volumes:
       - .:/code
-    command: php /code/tests/run.php
+    command: composer datadir-tests
