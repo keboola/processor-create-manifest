@@ -102,6 +102,34 @@ try {
                     break;
                 }
 
+
+                if ($parameters["columns_from"] === 'header') {
+                    $csv = new Keboola\Csv\CsvFile(
+                        $detectFile,
+                        $manifest["delimiter"],
+                        $manifest["enclosure"]
+                    );
+                    $firstSliceHeader = $csv->getHeader();
+
+                    // ensure all slices have same headers
+                    $headers = [];
+                    foreach ($subFinder as $slicedFilePart) {
+                        $csv = new Keboola\Csv\CsvFile(
+                            $slicedFilePart->getPathname(),
+                            $manifest["delimiter"],
+                            $manifest["enclosure"]
+                        );
+                        $header = $csv->getHeader();
+
+                        if ($header !== $firstSliceHeader) {
+                            throw new \Keboola\Processor\CreateManifest\Exception(sprintf(
+                                'All slices of the sliced table "%s" must have the same header ("%s" is first different).',
+                                $sourceFile->getPathname(),
+                                $slicedFilePart->getFilename()
+                            ));
+                        }
+                    }
+                }
             }
             $csv = new Keboola\Csv\CsvFile($detectFile, $manifest["delimiter"], $manifest["enclosure"]);
             if ($parameters["columns_from"] === 'auto') {
