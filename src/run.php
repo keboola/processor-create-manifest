@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-use Keboola\Component\UserException;
 use Keboola\Component\Logger;
-use MyComponent\Component;
+use Keboola\Processor\CreateManifest\Component;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -13,8 +12,11 @@ try {
     $app = new Component($logger);
     $app->run();
     exit(0);
-} catch (UserException $e) {
-    $logger->error($e->getMessage());
+} catch (\Keboola\Csv\Exception $e) {
+    $logger->error("The CSV file is invalid: " . $e->getMessage());
+    exit(1);
+} catch (\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException $e) {
+    $logger->error("Invalid configuration: " . $e->getMessage());
     exit(1);
 } catch (\Throwable $e) {
     $logger->critical(
