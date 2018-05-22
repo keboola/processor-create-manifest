@@ -1,41 +1,27 @@
 <?php
 
-namespace Keboola\Processor\CreateManifest;
+declare(strict_types=1);
 
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
+namespace MyComponent;
 
-class ConfigDefinition implements ConfigurationInterface
+use Keboola\Component\Config\BaseConfigDefinition;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+
+class ConfigDefinition extends BaseConfigDefinition
 {
-    public function getConfigTreeBuilder()
+    protected function getParametersDefinition(): ArrayNodeDefinition
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root("parameters");
-
-        $rootNode
+        $parametersNode = parent::getParametersDefinition();
+        // @formatter:off
+        /** @noinspection NullPointerExceptionInspection */
+        $parametersNode
             ->children()
-                ->scalarNode("delimiter")
-                    ->defaultValue(",")
-                ->end()
-                ->scalarNode("enclosure")
-                    ->defaultValue("\"")
-                ->end()
-                ->arrayNode("columns")
-                    ->scalarPrototype()
-                    ->end()
-                ->end()
-                ->enumNode("columns_from")
-                    ->values(["header", "auto"])
-                ->end()
-                ->arrayNode("primary_key")
-                    ->scalarPrototype()
-                    ->end()
-                ->end()
-                ->booleanNode("incremental")
-                    ->defaultFalse()
+                ->scalarNode('foo')
+                    ->defaultValue('baz')
                 ->end()
             ->end()
         ;
-        return $treeBuilder;
+        // @formatter:on
+        return $parametersNode;
     }
 }
