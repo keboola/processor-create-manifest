@@ -18,7 +18,9 @@ class Component extends BaseComponent
 
         $dataFolder = $this->getDataDir();
 
-        $config = $this->getConfig()->getRawData();
+        /** @var Config $config */
+        $config = $this->getConfig();
+        $configRawData = $config->getRawConfig();
         $outputPath = $dataFolder . "/out/tables";
 
         $parameters = $this->getConfig()->getParameters();
@@ -31,8 +33,8 @@ class Component extends BaseComponent
 
             $manifestVariables = array_keys($manifest);
             $configVariables = [];
-            if (isset($config["parameters"]) && is_array($config["parameters"])) {
-                $configVariables = array_keys($config["parameters"]);
+            if (isset($configRawData["parameters"]) && is_array($configRawData["parameters"])) {
+                $configVariables = array_keys($configRawData["parameters"]);
             }
 
             /*
