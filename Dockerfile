@@ -1,19 +1,30 @@
 FROM php:7-cli
 
-ENV DEBIAN_FRONTEND noninteractive
+ARG COMPOSER_FLAGS="--prefer-dist --no-interaction"
+ARG DEBIAN_FRONTEND=noninteractive
 ENV COMPOSER_ALLOW_SUPERUSER 1
+ENV COMPOSER_PROCESS_TIMEOUT 3600
 
-WORKDIR /tmp/
+WORKDIR /code/
+
+COPY docker/php-prod.ini /usr/local/etc/php/php.ini
+COPY docker/composer-install.sh /tmp/composer-install.sh
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-	    git \
-        zlib1g-dev \
+        git \
+        unzip \
 	&& rm -r /var/lib/apt/lists/* \
-	&& docker-php-ext-install -j$(nproc) zip \
-	&& curl -sS --fail https://getcomposer.org/installer | php \
-	&& mv /tmp/composer.phar /usr/local/bin/composer 
+	&& chmod +x /tmp/composer-install.sh \
+	&& /tmp/composer-install.sh
 
+## Composer - deps always cached unless changed
+# First copy only composer files
+COPY composer.* /code/
+# Download dependencies, but don't run scripts or init autoloaders as the app is missing
+RUN composer install $COMPOSER_FLAGS --no-scripts --no-autoloader
+# copy rest of the app
 COPY . /code/
-WORKDIR /code/
-RUN composer install --no-interaction
-CMD ["php", "/code/main.php"]
+# run normal composer - all deps are cached already
+RUN composer install $COMPOSER_FLAGS
+
+CMD ["php", "/code/src/run.php"]
