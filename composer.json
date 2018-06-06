@@ -20,7 +20,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Keboola\\Processor\\CreateManifest\\Tests\\": "tests/phpunit/"
+            "Keboola\\Processor\\CreateManifest\\Tests\\": "tests/phpunit/",
+            "Keboola\\Processor\\CreateManifest\\FunctionalTests\\": "tests/functional/"
         }
     },
     "require-dev": {
