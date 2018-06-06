@@ -32,7 +32,7 @@
     },
     "scripts": {
         "tests-phpunit": "phpunit",
-        "tests-datadir": "datadir-tests",
+        "tests-datadir": "phpunit tests/functional",
         "tests": [
             "@tests-phpunit",
             "@tests-datadir"
