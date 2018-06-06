@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c5b0984938cb28aeb28a78da4fe1e9fa",
+    "content-hash": "9593cdce8b8410c80fcc57084602b4b4",
     "packages": [
         {
             "name": "keboola/csv",
@@ -708,21 +708,22 @@
         },
         {
             "name": "keboola/datadir-tests",
-            "version": "1.1.0",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/datadir-tests.git",
-                "reference": "cc688ba414b6f0fdbe614b454637c06d24eba279"
+                "reference": "45531cbd546ce0dbb0f8c4b73301349c6d507be7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/datadir-tests/zipball/cc688ba414b6f0fdbe614b454637c06d24eba279",
-                "reference": "cc688ba414b6f0fdbe614b454637c06d24eba279",
+                "url": "https://api.github.com/repos/keboola/datadir-tests/zipball/45531cbd546ce0dbb0f8c4b73301349c6d507be7",
+                "reference": "45531cbd546ce0dbb0f8c4b73301349c6d507be7",
                 "shasum": ""
             },
             "require": {
                 "keboola/php-temp": "^1.0",
                 "php": "^7.1",
+                "phpunit/phpunit": "^7.0",
                 "symfony/filesystem": "^4.0",
                 "symfony/finder": "^4.0",
                 "symfony/process": "^4.0"
@@ -732,16 +733,53 @@
                 "keboola/coding-standard": "^2.0",
                 "phpstan/phpstan-shim": "^0.9.2"
             },
-            "bin": [
-                "src/datadir-tests"
-            ],
             "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload": {
+                "psr-4": {
+                    "Keboola\\DatadirTests\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Keboola\\DatadirTests\\Tests\\": "tests/phpunit"
+                }
+            },
+            "scripts": {
+                "phpstan": [
+                    "phpstan analyse ./src ./tests --level=max --no-progress -c phpstan.neon"
+                ],
+                "phpcs": [
+                    "phpcs -n --ignore=vendor --extensions=php ."
+                ],
+                "phpcbf": [
+                    "phpcbf -n --ignore=vendor --extensions=php ."
+                ],
+                "phplint": [
+                    "parallel-lint -j 10 --exclude vendor ."
+                ],
+                "tests": [
+                    "phpunit"
+                ],
+                "build": [
+                    "@phplint",
+                    "@phpcs",
+                    "@phpstan",
+                    "@tests"
+                ],
+                "ci": [
+                    "@composer validate --strict",
+                    "@build"
+                ]
+            },
             "license": [
                 "MIT"
             ],
             "description": "Tool for functional testing of Keboola Connection components",
-            "time": "2018-05-03T16:21:10+00:00"
+            "support": {
+                "source": "https://github.com/keboola/datadir-tests/tree/2.0.0",
+                "issues": "https://github.com/keboola/datadir-tests/issues"
+            },
+            "time": "2018-06-19T09:16:12+00:00"
         },
         {
             "name": "keboola/php-temp",
