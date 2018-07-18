@@ -65,7 +65,8 @@ class Component extends BaseComponent
                     $subFinder->in($sourceFile->getPathname())->depth(0);
                     if (!count($subFinder)) {
                         throw new Exception(
-                            "Sliced file '{$sourceFile->getPathname()}' does not contain any slices to read headers from. Please specify headers manually."
+                            "Sliced file '{$sourceFile->getPathname()}' does not contain any slices " + 
+                            "to read headers from. Please specify headers manually."
                         );
                     }
 
