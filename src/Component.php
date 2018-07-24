@@ -65,7 +65,8 @@ class Component extends BaseComponent
                     $subFinder->in($sourceFile->getPathname())->depth(0);
                     if (!count($subFinder)) {
                         throw new Exception(
-                            "Sliced file '{$sourceFile->getPathname()}' does not contain slices."
+                            "Sliced file '{$sourceFile->getPathname()}' does not contain any slices " +
+                            "to read headers from. Please specify headers manually."
                         );
                     }
 
@@ -121,7 +122,7 @@ class Component extends BaseComponent
                     $jsonEncode->encode($manifest, JsonEncoder::FORMAT)
                 );
             } catch (\Symfony\Component\Serializer\Exception\UnexpectedValueException $e) {
-                throw new Exception("Failed to create manifest: " . $e->getMessage());
+                throw new \Exception("Failed to create manifest: " . $e->getMessage());
             }
         }
     }

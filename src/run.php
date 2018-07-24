@@ -18,6 +18,9 @@ try {
 } catch (\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException $e) {
     $logger->error("Invalid configuration: " . $e->getMessage());
     exit(1);
+} catch (\Keboola\Processor\CreateManifest\Exception $e) {
+    $logger->error($e->getMessage());
+    exit(1);
 } catch (\Throwable $e) {
     $logger->critical(
         get_class($e) . ':' . $e->getMessage(),
