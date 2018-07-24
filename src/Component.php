@@ -122,7 +122,7 @@ class Component extends BaseComponent
                     $jsonEncode->encode($manifest, JsonEncoder::FORMAT)
                 );
             } catch (\Symfony\Component\Serializer\Exception\UnexpectedValueException $e) {
-                throw new Exception("Failed to create manifest: " . $e->getMessage());
+                throw new \Exception("Failed to create manifest: " . $e->getMessage());
             }
         }
     }
