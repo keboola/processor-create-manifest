@@ -19,12 +19,13 @@ Clone this repository and init the workspace with following command:
 git clone https://github.com/keboola/processor-create-manifest
 cd processor-create-manifest
 docker-compose build
+docker-compose run dev composer install
 ```
 
 Run the test suite using this command:
 
 ```
-docker-compose run tests
+docker-compose run dev composer ci
 ```
  
 # Integration
