@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Keboola\Processor\CreateManifest;
 
 use Keboola\Component\BaseComponent;
+use Keboola\Component\UserException;
 use Keboola\Csv\CsvFile;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
@@ -58,59 +59,62 @@ class Component extends BaseComponent
                 $manifest["columns"] = $parameters["columns"];
             }
 
-            if (isset($parameters["columns_from"])) {
-                $detectFile = $sourceFile->getPathname();
-                if (is_dir($sourceFile->getPathname())) {
-                    $subFinder = new Finder();
-                    $subFinder->in($sourceFile->getPathname())->depth(0);
-                    if (!count($subFinder)) {
-                        throw new Exception(
-                            "Sliced file '{$sourceFile->getPathname()}' does not contain any slices " +
-                            "to read headers from. Please specify headers manually."
-                        );
-                    }
+            try {
+                if (isset($parameters["columns_from"])) {
+                    $detectFile = $sourceFile->getPathname();
+                    if (is_dir($sourceFile->getPathname())) {
+                        $subFinder = new Finder();
+                        $subFinder->in($sourceFile->getPathname())->depth(0);
+                        if (!count($subFinder)) {
+                            throw new UserException(
+                                "Sliced file '{$sourceFile->getPathname()}' does not contain any slices " .
+                                "to read headers from. Please specify headers manually."
+                            );
+                        }
 
-                    foreach ($subFinder as $slicedFilePart) {
-                        $detectFile = $slicedFilePart->getPathname();
-                        break;
-                    }
-
-                    if ($parameters["columns_from"] === 'header') {
-                        $csv = new CsvFile(
-                            $detectFile,
-                            $manifest["delimiter"],
-                            $manifest["enclosure"]
-                        );
-                        $firstSliceHeader = $csv->getHeader();
-
-                        // ensure all slices have same headers
-                        $headers = [];
                         foreach ($subFinder as $slicedFilePart) {
+                            $detectFile = $slicedFilePart->getPathname();
+                            break;
+                        }
+
+                        if ($parameters["columns_from"] === 'header') {
                             $csv = new CsvFile(
-                                $slicedFilePart->getPathname(),
+                                $detectFile,
                                 $manifest["delimiter"],
                                 $manifest["enclosure"]
                             );
-                            $header = $csv->getHeader();
+                            $firstSliceHeader = $csv->getHeader();
 
-                            if ($header !== $firstSliceHeader) {
-                                // phpcs:disable Generic.Files.LineLength
-                                throw new Exception(sprintf(
-                                    'All slices of the sliced table "%s" must have the same header ("%s" is first different).',
-                                    $sourceFile->getPathname(),
-                                    $slicedFilePart->getFilename()
-                                ));
-                                // phpcs:enable
+                            // ensure all slices have same headers
+                            foreach ($subFinder as $slicedFilePart) {
+                                $csv = new CsvFile(
+                                    $slicedFilePart->getPathname(),
+                                    $manifest["delimiter"],
+                                    $manifest["enclosure"]
+                                );
+                                $header = $csv->getHeader();
+
+                                if ($header !== $firstSliceHeader) {
+                                    // phpcs:disable Generic.Files.LineLength
+                                    throw new UserException(sprintf(
+                                        'All slices of the sliced table "%s" must have the same header ("%s" is first different).',
+                                        $sourceFile->getPathname(),
+                                        $slicedFilePart->getFilename()
+                                    ));
+                                    // phpcs:enable
+                                }
                             }
                         }
                     }
+                    $csv = new CsvFile($detectFile, $manifest["delimiter"], $manifest["enclosure"]);
+                    if ($parameters["columns_from"] === 'auto') {
+                        $manifest["columns"] = $this->fillHeader(array_fill(0, $csv->getColumnsCount(), ""));
+                    } elseif ($parameters["columns_from"] === 'header') {
+                        $manifest["columns"] = $this->fillHeader($csv->getHeader());
+                    }
                 }
-                $csv = new CsvFile($detectFile, $manifest["delimiter"], $manifest["enclosure"]);
-                if ($parameters["columns_from"] === 'auto') {
-                    $manifest["columns"] = $this->fillHeader(array_fill(0, $csv->getColumnsCount(), ""));
-                } elseif ($parameters["columns_from"] === 'header') {
-                    $manifest["columns"] = $this->fillHeader($csv->getHeader());
-                }
+            } catch (\Keboola\Csv\Exception $e) {
+                throw new UserException('The CSV file is invalid ' . $e->getMessage());
             }
 
             $copyCommand = "mv " . $sourceFile->getPathname() . " " . $outputPath . "/" . $sourceFile->getBasename();
@@ -122,7 +126,7 @@ class Component extends BaseComponent
                     $jsonEncode->encode($manifest, JsonEncoder::FORMAT)
                 );
             } catch (\Symfony\Component\Serializer\Exception\UnexpectedValueException $e) {
-                throw new \Exception("Failed to create manifest: " . $e->getMessage());
+                throw new \RuntimeException("Failed to create manifest: " . $e->getMessage());
             }
         }
     }
