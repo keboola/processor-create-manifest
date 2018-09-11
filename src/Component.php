@@ -114,7 +114,7 @@ class Component extends BaseComponent
                     }
                 }
             } catch (\Keboola\Csv\Exception $e) {
-                throw new UserException('The CSV file is invalid ' . $e->getMessage());
+                throw new UserException('The CSV file is invalid: ' . $e->getMessage());
             }
 
             $copyCommand = "mv " . $sourceFile->getPathname() . " " . $outputPath . "/" . $sourceFile->getBasename();
