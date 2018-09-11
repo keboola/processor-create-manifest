@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Keboola\Component\UserException;
 use Keboola\Component\Logger;
 use Keboola\Processor\CreateManifest\Component;
 
@@ -12,13 +13,7 @@ try {
     $app = new Component($logger);
     $app->run();
     exit(0);
-} catch (\Keboola\Csv\Exception $e) {
-    $logger->error("The CSV file is invalid: " . $e->getMessage());
-    exit(1);
-} catch (\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException $e) {
-    $logger->error("Invalid configuration: " . $e->getMessage());
-    exit(1);
-} catch (\Keboola\Processor\CreateManifest\Exception $e) {
+} catch (UserException $e) {
     $logger->error($e->getMessage());
     exit(1);
 } catch (\Throwable $e) {
