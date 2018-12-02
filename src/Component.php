@@ -117,7 +117,7 @@ class Component extends BaseComponent
                 throw new UserException('The CSV file is invalid: ' . $e->getMessage());
             }
 
-            $copyCommand = "mv " . $sourceFile->getPathname() . " " . $outputPath . "/" . $sourceFile->getBasename();
+            $copyCommand = "mv " . escapeshellarg($sourceFile->getPathname()) . " " . escapeshellarg($outputPath . "/" . $sourceFile->getBasename());
             (new Process($copyCommand))->mustRun();
 
             try {
