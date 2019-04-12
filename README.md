@@ -42,10 +42,14 @@ It supports optional parameters:
  - `enclosure` -- CSV enclosure, defaults to `"`
  - `columns` -- Array of column names
  - `columns_from` (`header`, `auto`) -- Populates the `columns` attribute
-   - `header` -- Uses the first line of the CSV file (or of any of the slices) as the column names, if the headers are empty, then auto-generated names are used.
+   - `header` -- Uses the first line of the CSV file (or any of the slices) as the column names. If any of the headers is empty or an empty string, then auto-generated names are used.
    - `auto` -- Creates the column names automatically as a sequence, starting with `col_1` 
  - `primary_key` -- Array of column names
  - `incremental` -- `true` or `false`
+
+## Using `columns`
+
+Populating the `columns` attribute (manually or by using `columns_from` option) will make the imports consider the CSV file(s) headless. The first row of the CSV file(s) will be imported to the table data as well. If the first row contains headers we recommend using `keboola.processor-skip-lines` to remove the first line of the CSV file(s).
 
 ## Sample configurations
 
