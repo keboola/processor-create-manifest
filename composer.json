@@ -11,7 +11,8 @@
         "PHP": "^7.1",
         "symfony/process": "^4.0",
         "symfony/serializer": "^4.0",
-        "symfony/config": "^4.0"
+        "symfony/config": "^4.0",
+        "ext-mbstring": "*"
     },
     "autoload": {
         "psr-4": {

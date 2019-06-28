@@ -123,6 +123,12 @@ class Component extends BaseComponent
                 $outputPath . "/" . $sourceFile->getBasename(),
             ]))->mustRun();
 
+            if (!mb_check_encoding($manifest['columns'])) {
+                throw new UserException(
+                    'Column names contain invalid characters, check that the CSV uses UTF8 encoding. Column names: ' .
+                    mb_convert_encoding(implode(', ', $manifest['columns']), 'UTF-8', 'UTF-8')
+                );
+            }
             try {
                 file_put_contents(
                     $outputPath . "/" . $sourceFile->getBasename() . ".manifest",
