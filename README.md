@@ -89,3 +89,7 @@ Set delimiter and enclosure:
 }
 
 ```
+
+## License
+
+MIT licensed, see [LICENSE](./LICENSE) file.
