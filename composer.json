@@ -4,15 +4,15 @@
     "license": "MIT",
     "type": "project",
     "require": {
+        "ext-mbstring": "*",
+        "PHP": "^7.1",
+        "keboola/csv": "^3.0.0",
         "keboola/php-component": "^4.1",
-        "keboola/csv": "^1.1",
+        "symfony/config": "^4.0",
         "symfony/filesystem": "^4.0",
         "symfony/finder": "^4.0",
-        "PHP": "^7.1",
         "symfony/process": "^4.0",
-        "symfony/serializer": "^4.0",
-        "symfony/config": "^4.0",
-        "ext-mbstring": "*"
+        "symfony/serializer": "^4.0"
     },
     "autoload": {
         "psr-4": {
