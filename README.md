@@ -1,7 +1,5 @@
 # processor-create-manifest
 
-[![Build Status](https://travis-ci.org/keboola/processor-create-manifest.svg?branch=master)](https://travis-ci.org/keboola/processor-create-manifest)
-
 Takes all CSV files in `/data/in/tables` and creates or updates the manifest file move all files to `/data/out/tables`. 
 
 Adds or updates these manifest attributes
