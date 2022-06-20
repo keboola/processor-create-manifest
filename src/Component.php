@@ -6,7 +6,7 @@ namespace Keboola\Processor\CreateManifest;
 
 use Keboola\Component\BaseComponent;
 use Keboola\Component\UserException;
-use Keboola\Csv\CsvFile;
+use Keboola\Csv\CsvReader;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -78,7 +78,7 @@ class Component extends BaseComponent
                         }
 
                         if ($parameters["columns_from"] === 'header') {
-                            $csv = new CsvFile(
+                            $csv = new CsvReader(
                                 $detectFile,
                                 $manifest["delimiter"],
                                 $manifest["enclosure"]
@@ -87,7 +87,7 @@ class Component extends BaseComponent
 
                             // ensure all slices have same headers
                             foreach ($subFinder as $slicedFilePart) {
-                                $csv = new CsvFile(
+                                $csv = new CsvReader(
                                     $slicedFilePart->getPathname(),
                                     $manifest["delimiter"],
                                     $manifest["enclosure"]
@@ -106,7 +106,7 @@ class Component extends BaseComponent
                             }
                         }
                     }
-                    $csv = new CsvFile($detectFile, $manifest["delimiter"], $manifest["enclosure"]);
+                    $csv = new CsvReader($detectFile, $manifest["delimiter"], $manifest["enclosure"]);
                     if ($parameters["columns_from"] === 'auto') {
                         $manifest["columns"] = $this->fillHeader(array_fill(0, $csv->getColumnsCount(), ""));
                     } elseif ($parameters["columns_from"] === 'header') {
