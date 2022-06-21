@@ -1,0 +1,8 @@
+{
+  "parameters": {
+    "delimiter": "\t",
+    "enclosure": "\"",
+    "incremental": false,
+    "columns_from": "header"
+  }
+}
