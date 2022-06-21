@@ -6,7 +6,7 @@
     "require": {
         "ext-mbstring": "*",
         "PHP": "^7.1",
-        "keboola/csv": "^3.0.0",
+        "keboola/csv": "^3.1",
         "keboola/php-component": "^4.1",
         "symfony/config": "^4.0",
         "symfony/filesystem": "^4.0",
