@@ -110,6 +110,9 @@ class Component extends BaseComponent
                     if ($parameters["columns_from"] === 'auto') {
                         $manifest["columns"] = $this->fillHeader(array_fill(0, $csv->getColumnsCount(), ""));
                     } elseif ($parameters["columns_from"] === 'header') {
+                        if (empty($csv->getHeader())) {
+                            throw new UserException('Header cannot be empty.');
+                        }
                         $manifest["columns"] = $this->fillHeader($csv->getHeader());
                     }
                 }

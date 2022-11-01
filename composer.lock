@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "40f83908b6a4fc51876c26ce269c98f9",
+    "content-hash": "bac66a6761500791feaaa46073cf4c4f",
     "packages": [
         {
             "name": "keboola/csv",
-            "version": "3.1.0",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-csv.git",
-                "reference": "82cc689c3bc6cea423e8431eea6e5523c2ddc74c"
+                "reference": "ea1e00e255de657ad51b5ad3cef79e3ef9f2df9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-csv/zipball/82cc689c3bc6cea423e8431eea6e5523c2ddc74c",
-                "reference": "82cc689c3bc6cea423e8431eea6e5523c2ddc74c",
+                "url": "https://api.github.com/repos/keboola/php-csv/zipball/ea1e00e255de657ad51b5ad3cef79e3ef9f2df9d",
+                "reference": "ea1e00e255de657ad51b5ad3cef79e3ef9f2df9d",
                 "shasum": ""
             },
             "require": {
@@ -55,9 +55,9 @@
             ],
             "support": {
                 "issues": "https://github.com/keboola/php-csv/issues",
-                "source": "https://github.com/keboola/php-csv/tree/3.1.0"
+                "source": "https://github.com/keboola/php-csv/tree/3.2.0"
             },
-            "time": "2022-06-21T11:47:22+00:00"
+            "time": "2022-11-02T15:02:35+00:00"
         },
         {
             "name": "keboola/php-component",
