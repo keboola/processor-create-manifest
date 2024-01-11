@@ -6,7 +6,7 @@
     "require": {
         "ext-mbstring": "*",
         "PHP": "^7.1",
-        "keboola/csv": "^3.2.0",
+        "keboola/csv": "^3.4",
         "keboola/php-component": "^4.1",
         "symfony/config": "^4.0",
         "symfony/filesystem": "^4.0",
@@ -26,10 +26,10 @@
         }
     },
     "require-dev": {
-        "keboola/datadir-tests": "^2.0",
         "jakub-onderka/php-parallel-lint": "^1.0",
         "keboola/coding-standard": "^4.0",
-        "phpstan/phpstan-shim": "^0.9.2",
+        "keboola/datadir-tests": "^2.0",
+        "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^7.0"
     },
     "scripts": {

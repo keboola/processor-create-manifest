@@ -1,0 +1,61 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Cannot access offset 'columns' on mixed\\.$#"
+			count: 5
+			path: src/Component.php
+
+		-
+			message: "#^Cannot access offset 'delimiter' on mixed\\.$#"
+			count: 4
+			path: src/Component.php
+
+		-
+			message: "#^Cannot access offset 'enclosure' on mixed\\.$#"
+			count: 4
+			path: src/Component.php
+
+		-
+			message: "#^Cannot access offset 'incremental' on mixed\\.$#"
+			count: 1
+			path: src/Component.php
+
+		-
+			message: "#^Cannot access offset 'primary_key' on mixed\\.$#"
+			count: 1
+			path: src/Component.php
+
+		-
+			message: "#^Parameter \\#1 \\$header of method Keboola\\\\Processor\\\\CreateManifest\\\\Component\\:\\:fillHeader\\(\\) expects array, array\\<int, string\\>\\|false given\\.$#"
+			count: 1
+			path: src/Component.php
+
+		-
+			message: "#^Parameter \\#1 \\$input of function array_keys expects array, mixed given\\.$#"
+			count: 1
+			path: src/Component.php
+
+		-
+			message: "#^Parameter \\#1 \\$var of function mb_check_encoding expects array\\<string\\>\\|string, mixed given\\.$#"
+			count: 1
+			path: src/Component.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function implode expects array\\<string\\>, mixed given\\.$#"
+			count: 1
+			path: src/Component.php
+
+		-
+			message: "#^Parameter \\#2 \\$delimiter of class Keboola\\\\Csv\\\\CsvReader constructor expects string, mixed given\\.$#"
+			count: 3
+			path: src/Component.php
+
+		-
+			message: "#^Parameter \\#2 \\$pieces of function implode expects array, mixed given\\.$#"
+			count: 1
+			path: src/Component.php
+
+		-
+			message: "#^Parameter \\#3 \\$enclosure of class Keboola\\\\Csv\\\\CsvReader constructor expects string, mixed given\\.$#"
+			count: 3
+			path: src/Component.php

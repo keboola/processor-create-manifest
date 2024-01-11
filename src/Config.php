@@ -24,9 +24,4 @@ class Config extends BaseConfig
     {
         return $this->rawConfig;
     }
-
-    public function getFoo(): string
-    {
-        return $this->getValue(['parameters', 'foo']);
-    }
 }
