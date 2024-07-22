@@ -1,1 +1,1 @@
-{"delimiter":"\t","enclosure":"\"","primary_key":[],"incremental":false,"columns":["col1","col2"]}
+{"incremental":false,"delimiter":"\t","enclosure":"\"","columns":["col1","col2"],"column_metadata":{"col1":[{"key":"KBC.datatype.nullable","value":true}],"col2":[{"key":"KBC.datatype.nullable","value":true}]}}

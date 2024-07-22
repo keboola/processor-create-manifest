@@ -5,6 +5,8 @@ env:
   # Name of the image in the ECR
   APP_IMAGE: keboola/processor-create-manifest
 
+  KBC_DATA_TYPE_SUPPORT: "none"
+
   # Developer portal login
   KBC_DEVELOPERPORTAL_VENDOR: "keboola"
   KBC_DEVELOPERPORTAL_APP: "keboola.processor-create-manifest"

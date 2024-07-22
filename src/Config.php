@@ -9,17 +9,23 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Config extends BaseConfig
 {
-    /** @var array */
-    private $rawConfig;
+    /** @var array<string, array<string, string>> */
+    private array $rawConfig;
 
+    /**
+     * @param array<string, array<string, string>> $config
+     */
     public function __construct(
         array $config,
-        ?ConfigurationInterface $configDefinition = null
+        ?ConfigurationInterface $configDefinition = null,
     ) {
         $this->rawConfig = $config;
         parent::__construct($config, $configDefinition);
     }
 
+    /**
+     * @return array<string, array<string, string>>
+     */
     public function getRawConfig(): array
     {
         return $this->rawConfig;
