@@ -7,7 +7,7 @@
         "ext-mbstring": "*",
         "PHP": "^8.2",
         "keboola/csv": "^4.1",
-        "keboola/php-component": "^10.0",
+        "keboola/php-component": "^10.1.3",
         "symfony/config": "^6.4",
         "symfony/filesystem": "^6.4",
         "symfony/finder": "^6.4",

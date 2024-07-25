@@ -65,21 +65,7 @@ class Component extends BaseComponent
             }
 
             if (in_array('primary_key', $configVariables)) {
-                $primaryKeys = $parameters['primary_key'];
-                if ($manifest->getSchema() !== null) {
-                    foreach ($manifest->getSchema() as $schema) {
-                        $schema->setPrimaryKey(false);
-                        if (in_array($schema->getName(), $primaryKeys) === true) {
-                            $schema->setPrimaryKey(true);
-                            unset($primaryKeys[$schema->getName()]);
-                        }
-                    }
-                }
-                foreach ($primaryKeys as $primaryKey) {
-                    $manifest->addSchema(
-                        new ManifestOptionsSchema(name: $primaryKey, primaryKey: true),
-                    );
-                }
+                $manifest->setLegacyPrimaryKeys($parameters['primary_key']);
             }
 
             if ($manifest->isIncremental() === null || in_array('incremental', $configVariables)) {
