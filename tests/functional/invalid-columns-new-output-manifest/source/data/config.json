@@ -1,0 +1,10 @@
+{
+	"parameters": {
+		"columns_from": "header"
+	},
+	"storage": {
+		"output": {
+			"data_type_support": "authoritative"
+		}
+	}
+}

@@ -1,0 +1,12 @@
+{
+  "parameters": {
+    "delimiter": "\t",
+    "enclosure": "'",
+    "columns_from": "header"
+  },
+  "storage": {
+    "output": {
+      "data_type_support": "authoritative"
+    }
+  }
+}

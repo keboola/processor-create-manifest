@@ -1,0 +1,1 @@
+{"incremental":false,"delimiter":",","enclosure":"\"","columns":["this","col_2","csv"],"column_metadata":{"this":[{"key":"KBC.datatype.nullable","value":true}],"col_2":[{"key":"KBC.datatype.nullable","value":true}],"csv":[{"key":"KBC.datatype.nullable","value":true}]}}

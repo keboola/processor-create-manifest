@@ -1,0 +1,1 @@
+{"incremental":false,"delimiter":",","enclosure":"\"","manifest_type":"output","schema":[{"nullable":true,"primary_key":false,"name":"col3"},{"nullable":true,"primary_key":false,"name":"col1"}]}
