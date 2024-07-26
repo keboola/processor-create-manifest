@@ -82,7 +82,10 @@ jobs:
           tag_as_latest: true
       -
         name: Run tests
-        run: docker run ${{env.APP_IMAGE}} composer ci
+        run: |
+          docker run \
+          -e KBC_DATA_TYPE_SUPPORT \
+          ${{env.APP_IMAGE}} composer ci
 
   tests-in-kbc:
     needs: build
