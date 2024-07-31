@@ -1,0 +1,11 @@
+{
+  "parameters": {
+    "delimiter": "\t",
+    "enclosure": "'"
+  },
+  "storage": {
+    "output": {
+      "data_type_support": "authoritative"
+    }
+  }
+}

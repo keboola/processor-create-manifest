@@ -1,7 +1,8 @@
-version: '2'
 services:
   dev:
     build: .
+    environment:
+      - KBC_DATA_TYPE_SUPPORT=none
     volumes:
       - ./:/code
       - ./data:/data

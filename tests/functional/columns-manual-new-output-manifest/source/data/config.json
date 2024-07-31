@@ -1,0 +1,13 @@
+{
+  "parameters": {
+    "columns": [
+      "col1",
+      "col2"
+    ]
+  },
+  "storage": {
+    "output": {
+      "data_type_support": "authoritative"
+    }
+  }
+}

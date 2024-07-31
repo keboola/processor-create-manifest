@@ -15,33 +15,36 @@ class ConfigDefinition extends BaseConfigDefinition
      */
     protected function getParametersDefinition(): ArrayNodeDefinition
     {
-        $builder = new TreeBuilder();
+        $builder = new TreeBuilder('parameters');
         /** @var ArrayNodeDefinition $parametersNode */
-        $parametersNode = $builder->root('parameters');
+        $parametersNode = $builder->getRootNode();
 
         // @formatter:off
         /** @noinspection NullPointerExceptionInspection */
         $parametersNode
             ->children()
-                ->scalarNode("delimiter")
-                    ->defaultValue(",")
+                ->scalarNode('delimiter')
+                    ->defaultValue(',')
                 ->end()
-                ->scalarNode("enclosure")
-                    ->defaultValue("\"")
+                ->scalarNode('enclosure')
+                    ->defaultValue('"')
                 ->end()
-                ->arrayNode("columns")
+                ->arrayNode('columns')
                     ->scalarPrototype()
                     ->end()
                 ->end()
-                ->enumNode("columns_from")
-                    ->values(["header", "auto"])
+                ->enumNode('columns_from')
+                    ->values(['header', 'auto'])
                 ->end()
-                ->arrayNode("primary_key")
+                ->arrayNode('primary_key')
                     ->scalarPrototype()
                     ->end()
                 ->end()
-                ->booleanNode("incremental")
+                ->booleanNode('incremental')
                     ->defaultFalse()
+                ->end()
+                ->booleanNode('has_header')
+                    ->defaultTrue()
                 ->end()
             ->end();
         // @formatter:on

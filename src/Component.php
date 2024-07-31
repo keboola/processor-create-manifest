@@ -5,37 +5,44 @@ declare(strict_types=1);
 namespace Keboola\Processor\CreateManifest;
 
 use Keboola\Component\BaseComponent;
+use Keboola\Component\Manifest\ManifestManager\Options\OutTable\ManifestOptions;
+use Keboola\Component\Manifest\ManifestManager\Options\OutTable\ManifestOptionsSchema;
 use Keboola\Component\UserException;
 use Keboola\Csv\CsvReader;
+use Keboola\Csv\Exception;
+use RuntimeException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 class Component extends BaseComponent
 {
-    public function run(): void
-    {
-        $jsonEncode = new \Symfony\Component\Serializer\Encoder\JsonEncode();
 
+    private const DEFAULT_DELIMITER = ',';
+    private const DEFAULT_ENCLOSURE = '"';
+
+    protected function run(): void
+    {
         $dataFolder = $this->getDataDir();
 
         /** @var Config $config */
         $config = $this->getConfig();
         $configRawData = $config->getRawConfig();
-        $outputPath = $dataFolder . "/out/tables";
+        $outputPath = $dataFolder . '/out/tables';
 
         $parameters = $this->getConfig()->getParameters();
 
         $finder = new Finder();
-        $finder->notName("*.manifest")->in($dataFolder . "/in/tables")->depth(0);
+        $finder->notName('*.manifest')->in($dataFolder . '/in/tables')->depth(0);
 
         foreach ($finder as $sourceFile) {
             $manifest = $this->getManifestManager()->getTableManifest($sourceFile->getBasename());
 
-            $manifestVariables = array_keys($manifest);
             $configVariables = [];
-            if (isset($configRawData["parameters"]) && is_array($configRawData["parameters"])) {
-                $configVariables = array_keys($configRawData["parameters"]);
+            if (isset($configRawData['parameters'])) {
+                $configVariables = array_keys($configRawData['parameters']);
             }
 
             /*
@@ -43,24 +50,37 @@ class Component extends BaseComponent
              * to the parameters value (= user provided value or default)
              * https://github.com/keboola/processor-create-manifest/pull/11#discussion_r185779866
              */
-            if (!in_array("delimiter", $manifestVariables) || in_array("delimiter", $configVariables)) {
-                $manifest["delimiter"] = $parameters["delimiter"];
+            if ($manifest->getDelimiter() === null || in_array('delimiter', $configVariables)) {
+                $manifest->setDelimiter($parameters['delimiter'] ?? self::DEFAULT_DELIMITER);
             }
-            if (!in_array("enclosure", $manifestVariables) || in_array("enclosure", $configVariables)) {
-                $manifest["enclosure"] = $parameters["enclosure"];
+            if ($manifest->getEnclosure() === null || in_array('enclosure', $configVariables)) {
+                $manifest->setEnclosure($parameters['enclosure'] ?? self::DEFAULT_ENCLOSURE);
             }
-            if (!in_array("primary_key", $manifestVariables) || in_array("primary_key", $configVariables)) {
-                $manifest["primary_key"] = $parameters["primary_key"];
+
+            if ($manifest->getSchema() === [] || in_array('columns', $configVariables)) {
+                $manifest->setSchema([]);
+                foreach ($parameters['columns'] as $column) {
+                    $manifest->addSchema(new ManifestOptionsSchema($column));
+                }
             }
-            if (!in_array("incremental", $manifestVariables) || in_array("incremental", $configVariables)) {
-                $manifest["incremental"] = $parameters["incremental"];
+
+            if ($manifest->getSchema() !== null && in_array('primary_key', $configVariables)) {
+                foreach ($manifest->getSchema() as $schema) {
+                    $schema->setPrimaryKey(false);
+                    if (in_array($schema->getName(), $parameters['primary_key'])) {
+                        $schema->setPrimaryKey(true);
+                    }
+                }
+            } elseif (in_array('primary_key', $configVariables)) {
+                $manifest->setLegacyPrimaryKeys($parameters['primary_key']);
             }
-            if (!in_array("columns", $manifestVariables) || in_array("columns", $configVariables)) {
-                $manifest["columns"] = $parameters["columns"];
+
+            if ($manifest->isIncremental() === null || in_array('incremental', $configVariables)) {
+                $manifest->setIncremental($parameters['incremental']);
             }
 
             try {
-                if (isset($parameters["columns_from"])) {
+                if (isset($parameters['columns_from'])) {
                     $detectFile = $sourceFile->getPathname();
                     if (is_dir($sourceFile->getPathname())) {
                         $subFinder = new Finder();
@@ -68,7 +88,7 @@ class Component extends BaseComponent
                         if (!count($subFinder)) {
                             throw new UserException(
                                 "Sliced file '{$sourceFile->getPathname()}' does not contain any slices " .
-                                "to read headers from. Please specify headers manually."
+                                'to read headers from. Please specify headers manually.',
                             );
                         }
 
@@ -77,11 +97,11 @@ class Component extends BaseComponent
                             break;
                         }
 
-                        if ($parameters["columns_from"] === 'header') {
+                        if ($parameters['columns_from'] === 'header') {
                             $csv = new CsvReader(
                                 $detectFile,
-                                $manifest["delimiter"],
-                                $manifest["enclosure"]
+                                $manifest->getDelimiter(),
+                                $manifest->getEnclosure(),
                             );
                             $firstSliceHeader = $csv->getHeader();
 
@@ -89,8 +109,8 @@ class Component extends BaseComponent
                             foreach ($subFinder as $slicedFilePart) {
                                 $csv = new CsvReader(
                                     $slicedFilePart->getPathname(),
-                                    $manifest["delimiter"],
-                                    $manifest["enclosure"]
+                                    $manifest->getDelimiter(),
+                                    $manifest->getEnclosure(),
                                 );
                                 $header = $csv->getHeader();
 
@@ -99,46 +119,53 @@ class Component extends BaseComponent
                                     throw new UserException(sprintf(
                                         'All slices of the sliced table "%s" must have the same header ("%s" is first different).',
                                         $sourceFile->getPathname(),
-                                        $slicedFilePart->getFilename()
+                                        $slicedFilePart->getFilename(),
                                     ));
                                     // phpcs:enable
                                 }
                             }
                         }
                     }
-                    $csv = new CsvReader($detectFile, $manifest["delimiter"], $manifest["enclosure"]);
-                    if ($parameters["columns_from"] === 'auto') {
-                        $manifest["columns"] = $this->fillHeader(array_fill(0, $csv->getColumnsCount(), ""));
-                    } elseif ($parameters["columns_from"] === 'header') {
+                    $csv = new CsvReader(
+                        $detectFile,
+                        $manifest->getDelimiter(),
+                        $manifest->getEnclosure(),
+                    );
+                    if ($parameters['columns_from'] === 'auto') {
+                        $manifest->setColumns($this->fillHeader(array_fill(0, $csv->getColumnsCount(), '')));
+                    } elseif ($parameters['columns_from'] === 'header') {
                         if (empty($csv->getHeader())) {
                             throw new UserException('Header cannot be empty.');
                         }
-                        $manifest["columns"] = $this->fillHeader($csv->getHeader());
+                        $manifest->setColumns($this->fillHeader($csv->getHeader()));
                     }
                 }
-            } catch (\Keboola\Csv\Exception $e) {
+            } catch (Exception $e) {
                 throw new UserException('The CSV file is invalid: ' . $e->getMessage());
             }
 
             (new Process([
-                "mv",
+                'mv',
                 $sourceFile->getPathname(),
-                $outputPath . "/" . $sourceFile->getBasename(),
+                $outputPath . '/' . $sourceFile->getBasename(),
             ]))->mustRun();
 
-            if (!mb_check_encoding($manifest['columns'])) {
-                throw new UserException(
-                    'Column names contain invalid characters, check that the CSV uses UTF8 encoding. Column names: ' .
-                    mb_convert_encoding(implode(', ', $manifest['columns']), 'UTF-8', 'UTF-8')
-                );
+            if (in_array('has_header', $configVariables) === true) {
+                $manifest->setHasHeader($parameters['has_header']);
             }
+
+            if ($manifest->getSchema() !== null) {
+                $this->checkColumnsNames($manifest->getSchema());
+            }
+
             try {
-                file_put_contents(
-                    $outputPath . "/" . $sourceFile->getBasename() . ".manifest",
-                    $jsonEncode->encode($manifest, JsonEncoder::FORMAT)
+                $this->getManifestManager()->writeTableManifest(
+                    $sourceFile->getBasename(),
+                    $manifest,
+                    $this->config->getDataTypeSupport()->usingLegacyManifest(),
                 );
-            } catch (\Symfony\Component\Serializer\Exception\UnexpectedValueException $e) {
-                throw new \RuntimeException("Failed to create manifest: " . $e->getMessage());
+            } catch (UnexpectedValueException $e) {
+                throw new RuntimeException('Failed to create manifest: ' . $e->getMessage());
             }
         }
     }
@@ -153,16 +180,38 @@ class Component extends BaseComponent
         return ConfigDefinition::class;
     }
 
+    /**
+     * @param string[] $header
+     * @return string[]
+     */
     private function fillHeader(array $header): array
     {
         array_walk(
             $header,
             function (&$value, $index): void {
                 if (!$value) {
-                    $value = "col_" . ($index + 1);
+                    $value = 'col_' . ($index + 1);
                 }
-            }
+            },
         );
         return $header;
+    }
+
+    /** @param ManifestOptionsSchema[] $schemas */
+    private function checkColumnsNames(array $schemas): void
+    {
+        $invalidColumnNames = [];
+        foreach ($schemas as $schema) {
+            if (!mb_check_encoding($schema->getName())) {
+                $invalidColumnNames[] = $schema->getName();
+            }
+        }
+
+        if ($invalidColumnNames !== []) {
+            throw new UserException(
+                'Column names contain invalid characters, check that the CSV uses UTF8 encoding. Column names: ' .
+                implode(', ', $invalidColumnNames),
+            );
+        }
     }
 }

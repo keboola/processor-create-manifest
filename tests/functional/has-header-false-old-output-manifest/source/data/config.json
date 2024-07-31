@@ -1,0 +1,10 @@
+{
+  "parameters": {
+    "has_header": false
+  },
+  "storage": {
+    "output": {
+      "data_type_support": "none"
+    }
+  }
+}

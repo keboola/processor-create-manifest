@@ -1,0 +1,12 @@
+{
+  "image_parameters": {},
+  "storage": {},
+  "action": "run",
+  "authorization": {},
+  "parameters": {},
+  "storage": {
+    "output": {
+      "data_type_support": "authoritative"
+    }
+  }
+}
