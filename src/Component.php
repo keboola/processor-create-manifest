@@ -150,8 +150,8 @@ class Component extends BaseComponent
                 $outputPath . '/' . $sourceFile->getBasename(),
             ]))->mustRun();
 
-            if ($parameters['has_header'] === false) {
-                $this->removeHeaderFromFile($outputPath . '/' . $sourceFile->getBasename());
+            if (in_array('has_header', $configVariables) === true) {
+                $manifest->setHasHeader($parameters['has_header']);
             }
 
             if ($manifest->getSchema() !== null) {
@@ -213,17 +213,5 @@ class Component extends BaseComponent
                 implode(', ', $invalidColumnNames),
             );
         }
-    }
-
-    private function removeHeaderFromFile(string $filePath): void
-    {
-        $fileContents = file($filePath);
-        if ($fileContents === false) {
-            return;
-        }
-
-        // Remove the first line (header)
-        array_shift($fileContents);
-        file_put_contents($filePath, implode('', $fileContents));
     }
 }
