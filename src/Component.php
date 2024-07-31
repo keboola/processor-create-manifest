@@ -64,7 +64,14 @@ class Component extends BaseComponent
                 }
             }
 
-            if (in_array('primary_key', $configVariables)) {
+            if ($manifest->getSchema() !== null && in_array('primary_key', $configVariables)) {
+                foreach ($manifest->getSchema() as $schema) {
+                    $schema->setPrimaryKey(false);
+                    if (in_array($schema->getName(), $parameters['primary_key'])) {
+                        $schema->setPrimaryKey(true);
+                    }
+                }
+            } elseif (in_array('primary_key', $configVariables)) {
                 $manifest->setLegacyPrimaryKeys($parameters['primary_key']);
             }
 
@@ -143,6 +150,10 @@ class Component extends BaseComponent
                 $outputPath . '/' . $sourceFile->getBasename(),
             ]))->mustRun();
 
+            if ($parameters['has_header'] === false) {
+                $this->removeHeaderFromFile($outputPath . '/' . $sourceFile->getBasename());
+            }
+
             if ($manifest->getSchema() !== null) {
                 $this->checkColumnsNames($manifest->getSchema());
             }
@@ -202,5 +213,17 @@ class Component extends BaseComponent
                 implode(', ', $invalidColumnNames),
             );
         }
+    }
+
+    private function removeHeaderFromFile(string $filePath): void
+    {
+        $fileContents = file($filePath);
+        if ($fileContents === false) {
+            return;
+        }
+
+        // Remove the first line (header)
+        array_shift($fileContents);
+        file_put_contents($filePath, implode('', $fileContents));
     }
 }

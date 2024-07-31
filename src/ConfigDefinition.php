@@ -43,6 +43,9 @@ class ConfigDefinition extends BaseConfigDefinition
                 ->booleanNode('incremental')
                     ->defaultFalse()
                 ->end()
+                ->booleanNode('has_header')
+                    ->defaultTrue()
+                ->end()
             ->end();
         // @formatter:on
         return $parametersNode;

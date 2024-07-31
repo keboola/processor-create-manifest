@@ -1,0 +1,12 @@
+{
+  "parameters": {
+    "primary_key": [
+      "col1"
+    ]
+  },
+  "storage": {
+    "output": {
+      "data_type_support": "none"
+    }
+  }
+}

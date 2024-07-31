@@ -1,0 +1,10 @@
+{
+  "parameters": {
+    "has_header": true
+  },
+  "storage": {
+    "output": {
+      "data_type_support": "authoritative"
+    }
+  }
+}
