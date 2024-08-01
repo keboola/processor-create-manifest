@@ -121,12 +121,19 @@ class Component extends BaseComponent
                         $manifest->getEnclosure(),
                     );
                     if ($parameters['columns_from'] === 'auto') {
-                        $manifest->setColumns($this->fillHeader(array_fill(0, $csv->getColumnsCount(), '')));
+                        $manifest->setSchema(
+                            $this->createManifestOptionsSchemas(
+                                $this->fillHeader(array_fill(0, $csv->getColumnsCount(), ''))
+                            )
+                        );
                     } elseif ($parameters['columns_from'] === 'header') {
                         if (empty($csv->getHeader())) {
                             throw new UserException('Header cannot be empty.');
                         }
-                        $manifest->setColumns($this->fillHeader($csv->getHeader()));
+
+                        $manifest->setSchema(
+                            $this->createManifestOptionsSchemas($this->fillHeader($csv->getHeader()))
+                        );
                     }
                 }
             } catch (Exception $e) {
@@ -213,5 +220,14 @@ class Component extends BaseComponent
                 implode(', ', $invalidColumnNames),
             );
         }
+    }
+
+    private function createManifestOptionsSchemas(array $columns): array
+    {
+        $schemas = [];
+        foreach ($columns as $column) {
+            $schemas[] = new ManifestOptionsSchema($column);
+        }
+        return $schemas;
     }
 }
