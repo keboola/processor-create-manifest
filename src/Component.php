@@ -64,17 +64,6 @@ class Component extends BaseComponent
                 }
             }
 
-            if ($manifest->getSchema() !== null && in_array('primary_key', $configVariables)) {
-                foreach ($manifest->getSchema() as $schema) {
-                    $schema->setPrimaryKey(false);
-                    if (in_array($schema->getName(), $parameters['primary_key'])) {
-                        $schema->setPrimaryKey(true);
-                    }
-                }
-            } elseif (in_array('primary_key', $configVariables)) {
-                $manifest->setLegacyPrimaryKeys($parameters['primary_key']);
-            }
-
             if ($manifest->isIncremental() === null || in_array('incremental', $configVariables)) {
                 $manifest->setIncremental($parameters['incremental']);
             }
@@ -142,6 +131,17 @@ class Component extends BaseComponent
                 }
             } catch (Exception $e) {
                 throw new UserException('The CSV file is invalid: ' . $e->getMessage());
+            }
+
+            if ($manifest->getSchema() === null && in_array('primary_key', $configVariables)) {
+                $manifest->setLegacyPrimaryKeys($parameters['primary_key']);
+            } elseif ($manifest->getSchema() !== null && in_array('primary_key', $configVariables)) {
+                foreach ($manifest->getSchema() as $schema) {
+                    $schema->setPrimaryKey(false);
+                    if (in_array($schema->getName(), $parameters['primary_key'])) {
+                        $schema->setPrimaryKey(true);
+                    }
+                }
             }
 
             (new Process([
