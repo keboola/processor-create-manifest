@@ -123,8 +123,8 @@ class Component extends BaseComponent
                     if ($parameters['columns_from'] === 'auto') {
                         $manifest->setSchema(
                             $this->createManifestOptionsSchemas(
-                                $this->fillHeader(array_fill(0, $csv->getColumnsCount(), ''))
-                            )
+                                $this->fillHeader(array_fill(0, $csv->getColumnsCount(), '')),
+                            ),
                         );
                     } elseif ($parameters['columns_from'] === 'header') {
                         if (empty($csv->getHeader())) {
@@ -132,7 +132,7 @@ class Component extends BaseComponent
                         }
 
                         $manifest->setSchema(
-                            $this->createManifestOptionsSchemas($this->fillHeader($csv->getHeader()))
+                            $this->createManifestOptionsSchemas($this->fillHeader($csv->getHeader())),
                         );
                     }
                 }
@@ -222,6 +222,10 @@ class Component extends BaseComponent
         }
     }
 
+    /**
+     * @param string[] $columns
+     * @return ManifestOptionsSchema[]
+     */
     private function createManifestOptionsSchemas(array $columns): array
     {
         $schemas = [];
