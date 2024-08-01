@@ -64,17 +64,6 @@ class Component extends BaseComponent
                 }
             }
 
-            if ($manifest->getSchema() !== null && in_array('primary_key', $configVariables)) {
-                foreach ($manifest->getSchema() as $schema) {
-                    $schema->setPrimaryKey(false);
-                    if (in_array($schema->getName(), $parameters['primary_key'])) {
-                        $schema->setPrimaryKey(true);
-                    }
-                }
-            } elseif (in_array('primary_key', $configVariables)) {
-                $manifest->setLegacyPrimaryKeys($parameters['primary_key']);
-            }
-
             if ($manifest->isIncremental() === null || in_array('incremental', $configVariables)) {
                 $manifest->setIncremental($parameters['incremental']);
             }
@@ -132,16 +121,34 @@ class Component extends BaseComponent
                         $manifest->getEnclosure(),
                     );
                     if ($parameters['columns_from'] === 'auto') {
-                        $manifest->setColumns($this->fillHeader(array_fill(0, $csv->getColumnsCount(), '')));
+                        $manifest->setSchema(
+                            $this->createManifestOptionsSchemas(
+                                $this->fillHeader(array_fill(0, $csv->getColumnsCount(), '')),
+                            ),
+                        );
                     } elseif ($parameters['columns_from'] === 'header') {
                         if (empty($csv->getHeader())) {
                             throw new UserException('Header cannot be empty.');
                         }
-                        $manifest->setColumns($this->fillHeader($csv->getHeader()));
+
+                        $manifest->setSchema(
+                            $this->createManifestOptionsSchemas($this->fillHeader($csv->getHeader())),
+                        );
                     }
                 }
             } catch (Exception $e) {
                 throw new UserException('The CSV file is invalid: ' . $e->getMessage());
+            }
+
+            if ($manifest->getSchema() === null && in_array('primary_key', $configVariables)) {
+                $manifest->setLegacyPrimaryKeys($parameters['primary_key']);
+            } elseif ($manifest->getSchema() !== null && in_array('primary_key', $configVariables)) {
+                foreach ($manifest->getSchema() as $schema) {
+                    $schema->setPrimaryKey(false);
+                    if (in_array($schema->getName(), $parameters['primary_key'])) {
+                        $schema->setPrimaryKey(true);
+                    }
+                }
             }
 
             (new Process([
@@ -213,5 +220,18 @@ class Component extends BaseComponent
                 implode(', ', $invalidColumnNames),
             );
         }
+    }
+
+    /**
+     * @param string[] $columns
+     * @return ManifestOptionsSchema[]
+     */
+    private function createManifestOptionsSchemas(array $columns): array
+    {
+        $schemas = [];
+        foreach ($columns as $column) {
+            $schemas[] = new ManifestOptionsSchema($column);
+        }
+        return $schemas;
     }
 }

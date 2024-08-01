@@ -1,5 +1,6 @@
 {
   "parameters": {
-    "columns_from": "header"
+    "columns_from": "header",
+    "primary_key": []
   }
 }
