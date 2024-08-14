@@ -1,6 +1,5 @@
 includes:
     - phpstan-baseline.neon
 parameters:
-    checkMissingIterableValueType: false
     ignoreErrors:
         - '#Cannot call method scalarNode\(\) on Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface\|null\.#'
