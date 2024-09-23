@@ -143,7 +143,7 @@ class Component extends BaseComponent
             if ($manifest->getSchema() === null && in_array('primary_key', $configVariables)) {
                 $manifest->setLegacyPrimaryKeys($parameters['primary_key']);
             } elseif ($manifest->getSchema() !== null && in_array('primary_key', $configVariables)) {
-                 foreach ($manifest->getSchema() as $schema) {
+                foreach ($manifest->getSchema() as $schema) {
                     $schema->setPrimaryKey(false);
                     if (in_array($schema->getName(), $parameters['primary_key'])) {
                         $schema->setPrimaryKey(true);
