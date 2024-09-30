@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "63038526cedd6be988a65ae8bdc24811",
+    "content-hash": "d0e2a1b73f593eacb6c56b0578a6428a",
     "packages": [
         {
             "name": "keboola/common-exceptions",
@@ -101,16 +101,16 @@
         },
         {
             "name": "keboola/php-component",
-            "version": "dev-adamvyborny-allow-to-reset-legacy-primary-keys",
+            "version": "10.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-component.git",
-                "reference": "1841ca93bac2aa622a01402dcf912ecb13b4a475"
+                "reference": "3a44d9f852ac098c59f13435167eb4ad17fbbef6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-component/zipball/1841ca93bac2aa622a01402dcf912ecb13b4a475",
-                "reference": "1841ca93bac2aa622a01402dcf912ecb13b4a475",
+                "url": "https://api.github.com/repos/keboola/php-component/zipball/3a44d9f852ac098c59f13435167eb4ad17fbbef6",
+                "reference": "3a44d9f852ac098c59f13435167eb4ad17fbbef6",
                 "shasum": ""
             },
             "require": {
@@ -155,9 +155,9 @@
             ],
             "support": {
                 "issues": "https://github.com/keboola/php-component/issues",
-                "source": "https://github.com/keboola/php-component/tree/adamvyborny-allow-to-reset-legacy-primary-keys"
+                "source": "https://github.com/keboola/php-component/tree/10.1.6"
             },
-            "time": "2024-09-23T11:29:50+00:00"
+            "time": "2024-09-30T08:44:08+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -1782,16 +1782,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.2.0",
+            "version": "v5.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "23c79fbbfb725fb92af9bcf41065c8e9a0d49ddb"
+                "reference": "3abf7425cd284141dc5d8d14a9ee444de3345d1a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/23c79fbbfb725fb92af9bcf41065c8e9a0d49ddb",
-                "reference": "23c79fbbfb725fb92af9bcf41065c8e9a0d49ddb",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/3abf7425cd284141dc5d8d14a9ee444de3345d1a",
+                "reference": "3abf7425cd284141dc5d8d14a9ee444de3345d1a",
                 "shasum": ""
             },
             "require": {
@@ -1834,9 +1834,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.2.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.3.0"
             },
-            "time": "2024-09-15T16:40:33+00:00"
+            "time": "2024-09-29T13:56:26+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -2019,16 +2019,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.31.0",
+            "version": "1.32.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "249f15fb843bf240cf058372dad29e100cee6c17"
+                "reference": "6ca22b154efdd9e3c68c56f5d94670920a1c19a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/249f15fb843bf240cf058372dad29e100cee6c17",
-                "reference": "249f15fb843bf240cf058372dad29e100cee6c17",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/6ca22b154efdd9e3c68c56f5d94670920a1c19a4",
+                "reference": "6ca22b154efdd9e3c68c56f5d94670920a1c19a4",
                 "shasum": ""
             },
             "require": {
@@ -2060,22 +2060,22 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.31.0"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.32.0"
             },
-            "time": "2024-09-22T11:32:18+00:00"
+            "time": "2024-09-26T07:23:32+00:00"
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.4",
+            "version": "1.12.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "ffa517cb918591b93acc9b95c0bebdcd0e4538bd"
+                "reference": "7e6c6cb7cecb0a6254009a1a8a7d54ec99812b17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ffa517cb918591b93acc9b95c0bebdcd0e4538bd",
-                "reference": "ffa517cb918591b93acc9b95c0bebdcd0e4538bd",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/7e6c6cb7cecb0a6254009a1a8a7d54ec99812b17",
+                "reference": "7e6c6cb7cecb0a6254009a1a8a7d54ec99812b17",
                 "shasum": ""
             },
             "require": {
@@ -2120,7 +2120,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-19T07:58:01+00:00"
+            "time": "2024-09-26T12:45:22+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -3705,9 +3705,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "keboola/php-component": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
