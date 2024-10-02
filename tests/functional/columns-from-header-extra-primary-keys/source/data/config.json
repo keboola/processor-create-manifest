@@ -1,0 +1,8 @@
+{
+  "parameters": {
+    "columns_from": "header",
+    "primary_key": [
+      "Name"
+    ]
+  }
+}

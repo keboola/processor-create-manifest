@@ -38,6 +38,7 @@ class Component extends BaseComponent
         $finder->notName('*.manifest')->in($dataFolder . '/in/tables')->depth(0);
 
         foreach ($finder as $sourceFile) {
+            /** @var ManifestOptions $manifest */
             $manifest = $this->getManifestManager()->getTableManifest($sourceFile->getBasename());
 
             $configVariables = [];
@@ -140,24 +141,40 @@ class Component extends BaseComponent
                 throw new UserException('The CSV file is invalid: ' . $e->getMessage());
             }
 
-            if ($manifest->getSchema() === null && in_array('primary_key', $configVariables)) {
-                $manifest->setLegacyPrimaryKeys($parameters['primary_key']);
-            } elseif ($manifest->getSchema() !== null && in_array('primary_key', $configVariables)) {
+            if (in_array('primary_key', $configVariables)) {
+                $primaryKeys = $parameters['primary_key'];
+            } else {
+                $primaryKeys = [];
+                if ($manifest->getSchema() !== null) {
+                    $primaryKeys = array_map(
+                        fn($schema) => $schema->getName(),
+                        array_filter($manifest->getSchema(), fn($schema) => $schema->isPrimaryKey()),
+                    );
+                }
+                $primaryKeys = array_unique(array_merge($primaryKeys, $manifest->getLegacyPrimaryKeys() ?? []));
+            }
+
+            $manifest->setLegacyPrimaryKeys(null);
+            $primaryKeysSet = [];
+
+            if ($manifest->getSchema() === null && !empty($primaryKeys)) {
+                $manifest->setLegacyPrimaryKeys($primaryKeys);
+            } elseif ($manifest->getSchema() !== null) {
                 foreach ($manifest->getSchema() as $schema) {
-                    $schema->setPrimaryKey(false);
-                    if (in_array($schema->getName(), $parameters['primary_key'])) {
-                        $schema->setPrimaryKey(true);
+                    $schema->setPrimaryKey(in_array($schema->getName(), $primaryKeys));
+                    if ($schema->isPrimaryKey()) {
+                        $primaryKeysSet[] = $schema->getName();
                     }
                 }
-                $manifest->setLegacyPrimaryKeys(null);
-            } elseif ($manifest->getSchema() !== null && $manifest->getLegacyPrimaryKeys() !== null) {
-                foreach ($manifest->getSchema() as $schema) {
-                    $schema->setPrimaryKey(false);
-                    if (in_array($schema->getName(), $manifest->getLegacyPrimaryKeys())) {
-                        $schema->setPrimaryKey(true);
-                    }
+
+                $notFound = array_diff($primaryKeys, $primaryKeysSet);
+                if (!empty($notFound)) {
+                    $this->getLogger()->info(sprintf(
+                        'Invalid primary keys found: "%s", fallback to legacy manifest format.',
+                        implode(', ', $notFound),
+                    ));
+                    $manifest->setLegacyPrimaryKeys($notFound);
                 }
-                $manifest->setLegacyPrimaryKeys(null);
             }
 
             (new Process([

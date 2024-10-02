@@ -1,0 +1,13 @@
+{
+  "parameters": {
+    "columns_from": "header",
+    "primary_key": [
+      "Name"
+    ]
+  },
+  "storage": {
+    "output": {
+      "data_type_support": "authoritative"
+    }
+  }
+}
