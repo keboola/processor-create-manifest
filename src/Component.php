@@ -149,6 +149,15 @@ class Component extends BaseComponent
                         $schema->setPrimaryKey(true);
                     }
                 }
+                $manifest->setLegacyPrimaryKeys(null);
+            } elseif ($manifest->getSchema() !== null && $manifest->getLegacyPrimaryKeys() !== null) {
+                foreach ($manifest->getSchema() as $schema) {
+                    $schema->setPrimaryKey(false);
+                    if (in_array($schema->getName(), $manifest->getLegacyPrimaryKeys())) {
+                        $schema->setPrimaryKey(true);
+                    }
+                }
+                $manifest->setLegacyPrimaryKeys(null);
             }
 
             (new Process([

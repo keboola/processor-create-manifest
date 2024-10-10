@@ -1,0 +1,1 @@
+{"incremental":true,"delimiter":",","enclosure":"\"","columns":["Test","Flag"],"primary_key":["Test"],"column_metadata":{"Test":[{"key":"KBC.datatype.nullable","value":true}],"Flag":[{"key":"KBC.datatype.nullable","value":true}]}}
