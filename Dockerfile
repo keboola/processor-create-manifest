@@ -27,8 +27,4 @@ COPY . /code/
 # run normal composer - all deps are cached already
 RUN composer install $COMPOSER_FLAGS
 
-# Patch: accept "out" manifest_type from Python SDK (keboola/php-component fix)
-COPY patches/fix-manifest-type-out.patch /tmp/fix-manifest-type-out.patch
-RUN cd /code && git apply /tmp/fix-manifest-type-out.patch && rm /tmp/fix-manifest-type-out.patch
-
 CMD ["php", "/code/src/run.php"]
