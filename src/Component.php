@@ -20,6 +20,8 @@ use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 class Component extends BaseComponent
 {
 
+    private const MOVE_TIMEOUT_SECONDS = 300;
+
     private const DEFAULT_DELIMITER = ',';
     private const DEFAULT_ENCLOSURE = '"';
 
@@ -177,11 +179,13 @@ class Component extends BaseComponent
                 }
             }
 
-            (new Process([
+            $moveProcess = new Process([
                 'mv',
                 $sourceFile->getPathname(),
                 $outputPath . '/' . $sourceFile->getBasename(),
-            ]))->mustRun();
+            ]);
+            $moveProcess->setTimeout(self::MOVE_TIMEOUT_SECONDS);
+            $moveProcess->mustRun();
 
             if (in_array('has_header', $configVariables) === true) {
                 $manifest->setHasHeader($parameters['has_header']);
